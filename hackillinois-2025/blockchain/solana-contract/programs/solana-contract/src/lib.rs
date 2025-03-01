@@ -89,6 +89,7 @@ pub struct CreatePropertyContract<'info> {
 
 #[derive(Accounts)]
 pub struct TenantCheckIn<'info> {
+    /// CHECK: Should this be a mutable account?
     #[account(mut)]
     pub tenant: Signer<'info>,
     

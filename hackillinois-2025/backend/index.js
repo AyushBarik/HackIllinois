@@ -15,6 +15,14 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(cors({
   origin: 'http://localhost:3000',
+
+  current_tenant: "8xF3...j9Kl",
+  
+  // With:
+  is_rented: true,
+  
+  // And in the display logic, replace any references to current_tenant
+  // with a simple "Rented" textost:3000',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true

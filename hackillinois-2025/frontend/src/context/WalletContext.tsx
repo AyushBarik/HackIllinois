@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext, useEffect, useCallback } from 'react';
 import { Keypair, PublicKey, Connection, clusterApiUrl } from '@solana/web3.js';
 import { useMode } from './ModeContext';
 
@@ -41,9 +41,44 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
   const [isConnected, setIsConnected] = useState<boolean>(false);
   const [walletType, setWalletType] = useState<'owner' | 'tenant' | null>(null);
   const [balance, setBalance] = useState<number | null>(null);
-  
-  // Solana network connection for real mode
-  const connection = new Connection(clusterApiUrl('devnet'), 'confirmed');
+
+  // Refresh wallet balance
+  const refreshBalance = useCallback(async () => {
+    if (isDemoMode) {
+      // For demo mode, use fixed amounts
+      setBalance(walletType === 'owner' ? 1000 : 500);
+      return;
+    }
+
+    if (!publicKey) {
+      setBalance(null);
+      return;
+    }
+
+    try {
+      const connection = new Connection(clusterApiUrl('devnet'));
+      const balance = await connection.getBalance(new PublicKey(publicKey));
+      setBalance(balance / 1e9); // Convert lamports to SOL
+    } catch (error) {
+      console.error('Failed to fetch balance:', error);
+      setBalance(null);
+    }
+  }, [isDemoMode, publicKey, walletType]);
+
+  // Set initial balance in demo mode
+  useEffect(() => {
+    if (isDemoMode) {
+      // Set mock balance for demo mode
+      refreshBalance();
+    }
+  }, [isDemoMode]);
+
+  // Update mock balance when wallet type changes in demo mode
+  useEffect(() => {
+    if (isDemoMode && isConnected) {
+      refreshBalance();
+    }
+  }, [isDemoMode, isConnected, refreshBalance, walletType]);
 
   // Check if wallet was previously connected
   useEffect(() => {
@@ -58,40 +93,9 @@ export const WalletProvider: React.FC<WalletProviderProps> = ({ children }) => {
       // Fetch initial balance if in real mode
       if (!isDemoMode && savedPublicKey) {
         refreshBalance();
-      } else if (isDemoMode) {
-        // Set mock balance for demo mode
-        setBalance(walletType === 'owner' ? 1000 : 500);
-      }
+      } 
     }
   }, [isDemoMode]);
-
-  // Update mock balance when wallet type changes in demo mode
-  useEffect(() => {
-    if (isDemoMode && isConnected) {
-      setBalance(walletType === 'owner' ? 1000 : 500);
-    }
-  }, [walletType, isDemoMode, isConnected]);
-
-  // Refresh wallet balance
-  const refreshBalance = async () => {
-    if (isDemoMode) {
-      // For demo mode, use fixed amounts
-      setBalance(walletType === 'owner' ? 1000 : 500);
-      return;
-    }
-    
-    try {
-      if (publicKey) {
-        const pk = new PublicKey(publicKey);
-        const balance = await connection.getBalance(pk);
-        // Convert lamports to SOL
-        setBalance(balance / 1000000000);
-      }
-    } catch (error) {
-      console.error('Failed to fetch balance:', error);
-      setBalance(null);
-    }
-  };
 
   // Connect wallet
   const connect = async () => {

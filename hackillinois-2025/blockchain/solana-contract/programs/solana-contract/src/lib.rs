@@ -1,6 +1,7 @@
 use anchor_lang::prelude::*;
 
 pub mod state;
+pub mod manual;
 pub mod errors;
 pub mod utils;
 

@@ -16,13 +16,15 @@ if ! command_exists npm; then
     exit 1
 fi
 
-# Install all dependencies using workspaces
+# Install all dependencies
 echo "Installing all dependencies..."
-npm install --silent
+cd backend && npm install --silent
+cd ../frontend && npm install --silent
+cd ..
 
 # Start the applications
 echo "Starting backend server..."
-cd working/HackIllinois/hackillinois-2025/backend
+cd backend
 PORT=3001 node index.js &
 BACKEND_PID=$!
 

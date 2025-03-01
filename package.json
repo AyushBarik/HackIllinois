@@ -1,0 +1,12 @@
+{
+    "private": true,
+    "workspaces": [
+      "working/HackIllinois/hackillinois-2025/frontend",
+      "working/HackIllinois/hackillinois-2025/backend",
+      "working/HackIllinois/hackillinois-2025/blockchain",
+      "working/HackIllinois/hackillinois-2025/integration-testing"
+    ],
+    "scripts": {
+      "install-all": "npm install"
+    }
+  }

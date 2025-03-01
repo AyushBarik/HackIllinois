@@ -36,8 +36,8 @@ router.get('/', async (req, res) => {
           }
         },
         images: [
-          'https://example.com/images/beach-house-1.jpg',
-          'https://example.com/images/beach-house-2.jpg'
+          'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2',
+          'https://images.unsplash.com/photo-1518563259479-d003c05a6507'
         ],
         amenities: ['Wi-Fi', 'Kitchen', 'Pool', 'Beachfront']
       },
@@ -63,8 +63,8 @@ router.get('/', async (req, res) => {
           }
         },
         images: [
-          'https://example.com/images/mountain-cabin-1.jpg',
-          'https://example.com/images/mountain-cabin-2.jpg'
+          'https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8',
+          'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b'
         ],
         amenities: ['Wi-Fi', 'Fireplace', 'Hot Tub', 'Mountain Views']
       }
@@ -107,8 +107,8 @@ router.get('/:id', async (req, res) => {
         }
       },
       images: propertyId === 1
-        ? ['https://example.com/images/beach-house-1.jpg', 'https://example.com/images/beach-house-2.jpg']
-        : ['https://example.com/images/mountain-cabin-1.jpg', 'https://example.com/images/mountain-cabin-2.jpg'],
+        ? ['https://images.unsplash.com/photo-1499793983690-e29da59ef1c2', 'https://images.unsplash.com/photo-1518563259479-d003c05a6507']
+        : ['https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8', 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b'],
       amenities: propertyId === 1
         ? ['Wi-Fi', 'Kitchen', 'Pool', 'Beachfront']
         : ['Wi-Fi', 'Fireplace', 'Hot Tub', 'Mountain Views']

@@ -7,6 +7,7 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@phosphor-icons/react": "^2.1.7",
+    "@solana/buffer-layout": "^4.0.1",
     "@solana/web3.js": "^1.98.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -24,6 +25,7 @@
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
+    "superstruct": "^2.0.2",
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },

@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const apiRoutes = require('./routes/api');
 const propertyRoutes = require('./src/routes/propertyRoutes');
 const smartLockRoutes = require('./src/routes/smartLockRoutes');
 const { formatResponse } = require('./src/utils/helpers');
@@ -14,7 +13,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -77,7 +81,6 @@ app.get('/api/docs', (req, res) => {
 });
 
 // API Routes
-app.use('/api', apiRoutes);
 app.use('/api/properties', propertyRoutes);
 app.use('/api/locks', smartLockRoutes);
 

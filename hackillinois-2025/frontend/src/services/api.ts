@@ -11,6 +11,37 @@ const api = axios.create({
   },
 });
 
+// Add request interceptor for error handling
+api.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    console.error('Request error:', error);
+    return Promise.reject(error);
+  }
+);
+
+// Add response interceptor for error handling
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response) {
+      // Server responded with error
+      console.error('Response error:', error.response.data);
+    } else if (error.request) {
+      // Request was made but no response
+      console.error('Network error:', error.request);
+    } else {
+      // Something else happened
+      console.error('Error:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 // API endpoints for properties
 export const propertyAPI = {
   // Get all properties

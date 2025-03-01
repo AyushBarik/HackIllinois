@@ -18,13 +18,13 @@ fi
 
 # Install dependencies
 echo "Installing frontend dependencies..."
-cd frontend && npm install
+cd frontend && npm install --silent
 
 echo "Installing backend dependencies..."
-cd ../backend && npm install
+cd ../backend && npm install --silent
 
 echo "Installing blockchain dependencies..."
-cd ../blockchain/solana-contract && npm install
+cd ../blockchain/solana-contract && npm install --silent
 
 # Start the applications
 echo "Starting backend server..."
@@ -34,7 +34,7 @@ BACKEND_PID=$!
 
 echo "Starting frontend..."
 cd ../frontend
-BROWSER=none npm start &
+GENERATE_SOURCEMAP=false CI=true BROWSER=none npm start --silent &
 FRONTEND_PID=$!
 
 echo "Waiting for services to start..."

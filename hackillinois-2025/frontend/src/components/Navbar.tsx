@@ -10,13 +10,20 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Switch,
+  FormControl,
+  FormLabel,
+  Badge,
+  Tooltip,
 } from '@chakra-ui/react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useWallet } from '../context/WalletContext';
+import { useMode } from '../context/ModeContext';
 
 const Navbar: React.FC = () => {
   const navigate = useNavigate();
-  const { publicKey, isConnected, connect, disconnect, walletType, setWalletType } = useWallet();
+  const { publicKey, isConnected, connect, disconnect, walletType, setWalletType, balance } = useWallet();
+  const { isDemoMode, toggleMode } = useMode();
   
   // Handle wallet connection
   const handleConnect = async () => {
@@ -37,10 +44,31 @@ const Navbar: React.FC = () => {
   return (
     <Box as="nav" bg="blue.800" p={4} color="white" boxShadow="md">
       <Flex justify="space-between" align="center" maxW="1200px" mx="auto">
-        {/* Logo */}
-        <HStack spacing={3} onClick={() => navigate('/')} cursor="pointer">
-          <Heading size="md">🏠 SecureStay</Heading>
-          <Text fontSize="sm" color="blue.200">Blockchain Rentals</Text>
+        {/* Logo and Mode Toggle */}
+        <HStack spacing={3}>
+          <HStack spacing={3} onClick={() => navigate('/')} cursor="pointer">
+            <Heading size="md">🏠 SecureStay</Heading>
+            <Text fontSize="sm" color="blue.200">Blockchain Rentals</Text>
+          </HStack>
+          
+          <Tooltip label={isDemoMode ? "Using mock data and simulated blockchain" : "Using real Solana blockchain"}>
+            <FormControl display="flex" alignItems="center" width="auto" ml={4}>
+              <FormLabel htmlFor="demo-mode" mb="0" fontSize="xs">
+                {isDemoMode ? (
+                  <Badge colorScheme="green">Demo Mode</Badge>
+                ) : (
+                  <Badge colorScheme="purple">Real Mode</Badge>
+                )}
+              </FormLabel>
+              <Switch 
+                id="demo-mode" 
+                size="sm" 
+                colorScheme="green" 
+                isChecked={isDemoMode}
+                onChange={toggleMode} 
+              />
+            </FormControl>
+          </Tooltip>
         </HStack>
         
         {/* Navigation Links */}
@@ -62,9 +90,17 @@ const Navbar: React.FC = () => {
           )}
           
           {isConnected && (
-            <Link to="/digital-keys">
-              <Text _hover={{ color: 'blue.200' }}>Digital Keys</Text>
-            </Link>
+            <>
+              <Link to="/digital-keys">
+                <Text _hover={{ color: 'blue.200' }}>Digital Keys</Text>
+              </Link>
+              <Link to="/security">
+                <Text _hover={{ color: 'blue.200' }}>Security</Text>
+              </Link>
+              <Link to="/transactions">
+                <Text _hover={{ color: 'blue.200' }}>Transactions</Text>
+              </Link>
+            </>
           )}
         </HStack>
         
@@ -74,7 +110,14 @@ const Navbar: React.FC = () => {
             <>
               <Menu>
                 <MenuButton as={Button} colorScheme="blue" variant="ghost">
-                  {truncatePublicKey(publicKey || '')}
+                  <HStack>
+                    <Text>{truncatePublicKey(publicKey || '')}</Text>
+                    {balance !== null && (
+                      <Badge colorScheme="green" variant="solid">
+                        {balance.toFixed(2)} SOL
+                      </Badge>
+                    )}
+                  </HStack>
                 </MenuButton>
                 <MenuList color="black">
                   <MenuItem onClick={() => setWalletType('owner')}>

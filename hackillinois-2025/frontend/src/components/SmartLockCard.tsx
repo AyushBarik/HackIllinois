@@ -14,7 +14,8 @@ import {
   Icon,
   Tooltip
 } from '@chakra-ui/react';
-import { smartLockAPI } from '../services/api';
+import apiAdapter from '../services/apiAdapter';
+import { useMode } from '../context/ModeContext';
 
 interface SmartLockCardProps {
   lock: {
@@ -37,6 +38,7 @@ interface SmartLockCardProps {
 const SmartLockCard: React.FC<SmartLockCardProps> = ({ lock, accessToken, onStatusChange }) => {
   const [isLoading, setIsLoading] = useState(false);
   const toast = useToast();
+  const { isDemoMode } = useMode();
   const cardBg = useColorModeValue('white', 'gray.700');
   const borderColor = useColorModeValue('gray.200', 'gray.600');
   
@@ -67,18 +69,24 @@ const SmartLockCard: React.FC<SmartLockCardProps> = ({ lock, accessToken, onStat
     
     setIsLoading(true);
     try {
-      const response = await smartLockAPI.unlockDoor(lock.id, accessToken);
+      const success = await apiAdapter.unlockDoor(lock.id, accessToken);
       
-      toast({
-        title: 'Success',
-        description: 'Door unlocked successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true
-      });
-      
-      if (onStatusChange) {
-        onStatusChange();
+      if (success) {
+        toast({
+          title: 'Success',
+          description: isDemoMode 
+            ? 'Door unlocked successfully (Demo Mode)' 
+            : 'Door unlocked successfully via blockchain',
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        });
+        
+        if (onStatusChange) {
+          onStatusChange();
+        }
+      } else {
+        throw new Error('Failed to unlock door');
       }
     } catch (error) {
       toast({
@@ -108,18 +116,24 @@ const SmartLockCard: React.FC<SmartLockCardProps> = ({ lock, accessToken, onStat
     
     setIsLoading(true);
     try {
-      const response = await smartLockAPI.lockDoor(lock.id, accessToken);
+      const success = await apiAdapter.lockDoor(lock.id, accessToken);
       
-      toast({
-        title: 'Success',
-        description: 'Door locked successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true
-      });
-      
-      if (onStatusChange) {
-        onStatusChange();
+      if (success) {
+        toast({
+          title: 'Success',
+          description: isDemoMode 
+            ? 'Door locked successfully (Demo Mode)' 
+            : 'Door locked successfully via blockchain',
+          status: 'success',
+          duration: 3000,
+          isClosable: true
+        });
+        
+        if (onStatusChange) {
+          onStatusChange();
+        }
+      } else {
+        throw new Error('Failed to lock door');
       }
     } catch (error) {
       toast({
